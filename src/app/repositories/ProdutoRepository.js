@@ -1,25 +1,30 @@
-import connection from "../database/connection.js"
+import { CONSULTA } from "../database/connection.js"
 
 class ProdutoRepository {
-    create () {}
-   
-    findAll (req,res) {
-        const SQL = 'SELECT * FROM produtos'
-        connection.query(SQL, (error, result) => {
-          if(error){
-            return error
-          } else{
-            console.log(`SQL instruction => ${SQL}`)
-            return result
-          }
-        })
+    create (produto, preco) {
+      const SQL = 'INSERT INTO produtos (id,produto, preco) VALUES (DEFAULT, ?, ?)'
+      return CONSULTA(SQL, [produto, preco], 'Não foi possível criar/cadastrar!')
     }
    
-    findById () {}
+    findAll () {
+      const SQL = 'SELECT * FROM produtos'
+      return CONSULTA(SQL, 'Não foi possível listar')
+    }
    
-    update () {}
+    findById (id) {
+      const SQL = 'SELECT * FROM produtos WHERE id=?'
+      return CONSULTA(SQL, id, 'Não foi possível encontrar pelo id fornecido')
+    }
    
-    delete () {}
+    update (id, produto, preco) {
+      const SQL = 'UPDATE produtos SET produto=?, preco=? WHERE id=?'
+      return CONSULTA(SQL, [produto, preco, id], 'Não foi possível encontrar pelo id fornecido')
+    }
+   
+    delete (id) {
+      const SQL = 'DELETE FROM produtos WHERE id=?'
+      return CONSULTA(SQL, id, 'Não foi possível deletar o produto')
+    }
 }
 
 export default new ProdutoRepository
